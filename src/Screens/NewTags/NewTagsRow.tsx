@@ -16,7 +16,7 @@ interface INewTagsRowState {
 }
 
 class NewTagsRow extends Component<INewTagsRowProps, INewTagsRowState> {
-  private timeoutId: NodeJS.Timeout | undefined; // throttle so it doesn't trigger on every key press
+  private timeoutId: number | undefined; // throttle so it doesn't trigger on every key press
 
   constructor(props: INewTagsRowProps) {
     super(props);
@@ -37,13 +37,10 @@ class NewTagsRow extends Component<INewTagsRowProps, INewTagsRowState> {
     const { timeoutId } = this;
     if (title !== prevState.title) { // only search if query has changed
       clearTimeout(timeoutId);
-      this.timeoutId = setTimeout(() => {
-        let typeaheadTags: string[] = [];
-        getTypeaheadTags(title).then((tags: string[]) => {
-          typeaheadTags = tags;
-        }).finally(() => {
-          editTag(analysisIndex, tagIndex, title); // update tag in text analysis JSON
-          this.setState({ typeaheadTags }); // render typeahead tags
+      this.timeoutId = window.setTimeout(() => {
+        editTag(analysisIndex, tagIndex, title); // update tag in text analysis JSON
+        this.setState({ // render typeahead tags
+          typeaheadTags: getTypeaheadTags(title)
         });
       }, 300);
     }

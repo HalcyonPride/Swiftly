@@ -31,10 +31,10 @@ class App extends Component<any, IAppState> {
     event.returnValue = ''; // reminder to save before navigating away from web page
   };
 
-  async componentDidMount(): Promise<void> {
+  componentDidMount(): void {
     window.addEventListener('beforeunload', this.onUnload);
     this.setState({ // load sample data for demo purposes
-      textAnalysisJson: await getTextAnalyses()
+      textAnalysisJson: getTextAnalyses()
     });
   }
 

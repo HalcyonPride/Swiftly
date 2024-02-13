@@ -79,12 +79,12 @@ const sampleTextAnalyses: ITextAnalysisJson = {
 }
 
 // accesses database to get text analyses; in absence of online database, simply loads static JSON
-export async function getTextAnalyses(): Promise<ITextAnalysisJson> {
+export function getTextAnalyses(): ITextAnalysisJson {
   return sampleTextAnalyses;
 }
 
 // accesses database to put text analyses; in absence of online database, simply prints JSON file
-export async function putTextAnalyses(textAnalysisJson: ITextAnalysisJson): Promise<boolean> {
+export function putTextAnalyses(textAnalysisJson: ITextAnalysisJson): void {
   // https://stackoverflow.com/questions/50694881/how-to-download-file-in-react-js
   const href = URL.createObjectURL(new Blob([JSON.stringify(textAnalysisJson)], { type: 'application/json' }));
   const link = document.createElement('a');
@@ -94,5 +94,4 @@ export async function putTextAnalyses(textAnalysisJson: ITextAnalysisJson): Prom
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(href);
-  return true;
 }

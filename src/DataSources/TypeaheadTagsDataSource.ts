@@ -12,12 +12,8 @@ const randomWords = [
 ];
 
 // calls typeahead API to provide tag suggestions; in absence of redacted API, simply queries static list of words
-export async function getTypeaheadTags(query: string): Promise<string[]> {
-  try {
-    return randomWords.filter((word: string) => word.startsWith(query.toLowerCase()));
-  } catch (error) { // don't break the app if you fail to get suggestions
-    return [];
-  }
+export function getTypeaheadTags(query: string): string[] {
+  return randomWords.filter((word: string) => word.startsWith(query.toLowerCase()));
 }
 
 export default getTypeaheadTags;

@@ -1,11 +1,10 @@
 export async function betterFetch(url: string, options?: RequestInit): Promise<any> {
   const response = await fetch(url, options);
-  if (!response.ok) {
-    const text = await response.text();
-    console.log(text);
-    throw new Error();
-  } else {
+  if (!!response.ok) {
     return await response.json();
+  } else {
+    console.log(await response.text());
+    throw new Error();
   }
 }
 

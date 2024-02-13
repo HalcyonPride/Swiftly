@@ -40,12 +40,11 @@ export function MainScreen(mainScreenProps: IMainScreenProps) {
             id='text-content'
             pages={ pages }
             currentPage={ analysisIndex }
-            children={
-              <TextContent
-                text={ text }
-              />
-            }
-          />
+          >
+            <TextContent
+              text={ text }
+            />
+          </BetterScroller>
         </div>
       </div>
       <div className='RightColumn'>
@@ -57,29 +56,27 @@ export function MainScreen(mainScreenProps: IMainScreenProps) {
             id='previous-tags'
             pages={ pages }
             currentPage={ analysisIndex }
-            children={
-              <PreviousTags
-                textAnalysisJson={ textAnalysisJson }
-                analysisIndex={ analysisIndex }
-                rejectTag={ rejectTag }
-              />
-            }
-          />
+          >
+            <PreviousTags
+              textAnalysisJson={ textAnalysisJson }
+              analysisIndex={ analysisIndex }
+              rejectTag={ rejectTag }
+            />
+          </BetterScroller>
         </div>
         <div className='NewTags'>
           <BetterScroller
             id='new-tags'
             pages={ pages }
             currentPage={ analysisIndex }
-            children={
-              <NewTags
-                textAnalysisJson={ textAnalysisJson }
-                analysisIndex={ analysisIndex }
-                addEmptyTag={ addEmptyTag }
-                editTag={ editTag }
-              />
-            }
-          />
+          >
+            <NewTags
+              textAnalysisJson={ textAnalysisJson }
+              analysisIndex={ analysisIndex }
+              addEmptyTag={ addEmptyTag }
+              editTag={ editTag }
+            />
+          </BetterScroller>
         </div>
       </div>
     </div>

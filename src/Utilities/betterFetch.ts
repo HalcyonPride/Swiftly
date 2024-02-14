@@ -1,4 +1,4 @@
-export async function betterFetch(url: string, options?: RequestInit): Promise<any> {
+export async function betterFetch<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, options);
   if (!!response.ok) {
     return await response.json();

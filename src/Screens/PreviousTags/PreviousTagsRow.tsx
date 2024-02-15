@@ -1,15 +1,13 @@
 import ITag from '../../Interfaces/ITag';
 
 interface IPreviousTagsRowProps {
-  analysisIndex: number; // needed to find the text analysis to update
   tagIndex: number; // needed to find the tag to update
   tag: ITag;
-  rejectTag: (analysisIndex: number, tagIndex: number) => void;
+  rejectTag: (tagIndex: number) => void;
 }
 
 export function PreviousTagsRow(previousTagsRowProps: IPreviousTagsRowProps) {
   const {
-    analysisIndex,
     tagIndex,
     tag,
     rejectTag
@@ -25,7 +23,7 @@ export function PreviousTagsRow(previousTagsRowProps: IPreviousTagsRowProps) {
         <input
           type="checkbox"
           checked={ rejected }
-          onChange={ () => rejectTag(analysisIndex, tagIndex) } // reject tag in text analysis JSON
+          onChange={ () => rejectTag(tagIndex) } // reject tag in text analysis JSON
         />
       </td>
     </tr>

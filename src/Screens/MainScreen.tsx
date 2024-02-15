@@ -10,9 +10,9 @@ import BetterScroller from '../Utilities/BetterScroller';
 interface IMainScreenProps {
   textAnalysisJson: ITextAnalysisJson;
   analysisIndex: number;
-  rejectTag: (analysisIndex: number, tagIndex: number) => void;
-  addEmptyTag: (analysisIndex: number) => void;
-  editTag: (analysisIndex: number, tagIndex: number, title: string) => void;
+  rejectTag: (tagIndex: number) => void;
+  addEmptyTag: () => void;
+  editTag: (tagIndex: number, title: string) => void;
 }
 
 // renders main screen for text analysis

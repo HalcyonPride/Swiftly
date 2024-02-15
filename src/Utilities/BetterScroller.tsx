@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './BetterScroller.css';
 
 interface IBetterScrollerProps {
@@ -8,66 +8,51 @@ interface IBetterScrollerProps {
   children: React.ReactNode;
 }
 
-interface IBetterScrollerState {
-  scrollTops: number[];
-}
-
 // enable app to remember scroll position while switching between pages
 
-class BetterScroller extends Component<IBetterScrollerProps, IBetterScrollerState> {
-  private readonly id: string; // for event listener
+export function BetterScroller(betterScrollerProps: IBetterScrollerProps) {
+  const {
+    id,
+    pages,
+    currentPage,
+    children
+  } = betterScrollerProps;
 
-  constructor(props: IBetterScrollerProps) {
-    super(props);
-    const {
-      id,
-      pages
-    } = this.props;
-    this.id = `${id}-better-scroller`; // MUST have unique ID to track multiple similar scrollers
-    this.state = {
-      scrollTops: new Array(pages).fill(0)
+  const [ scrollTops, setScrollTops ] = useState<number[]>(new Array(pages).fill(0));
+
+  const scrollerRef = useRef<HTMLElement | null>(null);
+
+  const scrollerId = `${id}-better-scroller`; // MUST have unique ID to track multiple similar scrollers
+
+  const handleScroll = useCallback(() => { // update record every time the user scrolls
+    setScrollTops((scrollTops) => [
+      ...scrollTops.slice(0, currentPage),
+      scrollerRef.current ? scrollerRef.current.scrollTop : 0,
+      ...scrollTops.slice(currentPage + 1)
+    ]);
+  }, [ currentPage ]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      scrollerRef.current = document.getElementById(scrollerId);
+      scrollerRef.current?.addEventListener('scroll', handleScroll);
+    }
+    return () => {
+      scrollerRef.current?.removeEventListener('scroll', handleScroll);
     };
-  }
+  });
 
-  onScroll = (event: Event) => { // update record every time the user scrolls
-    const { currentPage } = this.props;
-    const { scrollTops } = this.state;
-    const scroller = document.getElementById(this.id);
-    if (scroller !== null) {
-      this.setState({
-        scrollTops: [
-          ...scrollTops.slice(0, currentPage),
-          scroller.scrollTop,
-          ...scrollTops.slice(currentPage + 1)
-        ]
-      });
+  useEffect(() => {
+    if (scrollerRef.current !== null) {
+      scrollerRef.current.scrollTop = scrollTops[currentPage];
     }
-  };
+  }, [ currentPage, scrollTops ]);
 
-  componentDidMount(): void {
-    document.getElementById(this.id)?.addEventListener('scroll', this.onScroll);
-  }
-
-  componentDidUpdate(prevProps: Readonly<IBetterScrollerProps>, prevState: Readonly<IBetterScrollerState>, snapshot?: any): void {
-    const { currentPage } = this.props;
-    const { scrollTops } = this.state;
-    const scroller = document.getElementById(this.id);
-    if (scroller !== null) {
-      scroller.scrollTop = scrollTops[currentPage];
-    }
-  }
-
-  componentWillUnmount(): void {
-    document.getElementById(this.id)?.removeEventListener('scroll', this.onScroll);
-  }
-
-  render() {
-    return(
-      <div className="BetterScroller" id={ this.id }>
-        { this.props.children }
-      </div>
-    );
-  }
+  return (
+    <div className="BetterScroller" id={ scrollerId }>
+      { children }
+    </div>
+  );
 }
 
 export default BetterScroller;

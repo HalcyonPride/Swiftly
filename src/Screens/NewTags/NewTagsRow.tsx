@@ -1,81 +1,58 @@
-import { ChangeEvent, Component } from 'react';
+import { ChangeEvent, useCallback, useRef, useState } from 'react';
 
 import getTypeaheadTags from '../../DataSources/TypeaheadTagsDataSource';
 import ITag from '../../Interfaces/ITag';
 
 interface INewTagsRowProps {
-  analysisIndex: number; // needed to find the text analysis to update
   tagIndex: number; // needed to find the tag to update
   tag: ITag;
-  editTag: (analysisIndex: number, tagIndex: number, title: string) => void;
+  editTag: (tagIndex: number, title: string) => void;
 }
 
-interface INewTagsRowState {
-  title: string;
-  typeaheadTags: string[];
-}
+export function NewTagsRow(newTagsRowProps: INewTagsRowProps) {
+  const {
+    tagIndex,
+    tag,
+    editTag
+  } = newTagsRowProps;
 
-class NewTagsRow extends Component<INewTagsRowProps, INewTagsRowState> {
-  private timeoutId: number | undefined; // throttle so it doesn't trigger on every key press
+  const [ title, setTitle ] = useState(tag.title);
+  const [ typeaheadTags, setTypeaheadTags ] = useState<string[]>([]);
 
-  constructor(props: INewTagsRowProps) {
-    super(props);
-    this.timeoutId = undefined;
-    this.state = {
-      title: props.tag.title,
-      typeaheadTags: []
-    };
-  }
+  const timeoutIdRef = useRef<number | undefined>(undefined); // throttle so it doesn't trigger on every key press
 
-  componentDidUpdate(prevProps: Readonly<INewTagsRowProps>, prevState: Readonly<INewTagsRowState>, snapshot?: any): void {
-    const {
-      analysisIndex,
-      tagIndex,
-      editTag
-    } = this.props;
-    const { title } = this.state;
-    const { timeoutId } = this;
-    if (title !== prevState.title) { // only search if query has changed
-      clearTimeout(timeoutId);
-      this.timeoutId = window.setTimeout(() => {
-        editTag(analysisIndex, tagIndex, title); // update tag in text analysis JSON
-        this.setState({ // render typeahead tags
-          typeaheadTags: getTypeaheadTags(title)
-        });
+  const dropdownId = `typeahead-tags-${tagIndex}`;
+
+  const handleInputChange = useCallback((input: string) => {
+    setTitle(input);
+    if (input !== title) { // only search if query has changed
+      clearTimeout(timeoutIdRef.current);
+      timeoutIdRef.current = window.setTimeout(() => {
+        editTag(tagIndex, input); // update tag in text analysis JSON
+        setTypeaheadTags(getTypeaheadTags(input)); // render typeahead tags
       }, 300);
     }
-  }
+  }, [ tagIndex, title, editTag ]);
 
-  render() {
-    const {
-      analysisIndex,
-      tagIndex
-    } = this.props;
-    const {
-      title,
-      typeaheadTags
-    } = this.state;
-    const dropdownId = `typeahead-tags-${analysisIndex}-${tagIndex}`; // MUST have unique ID so React can render multiple similar lists correctly
-    return(
-      <tr>
-        <td>
-          <input
-            list={ dropdownId }
-            value={ title }
-            onChange={ (event: ChangeEvent<HTMLInputElement>) => this.setState({ title: event.target.value }) }
-          />
-          <datalist id={ dropdownId }>
-            { typeaheadTags.map((typeaheadTag: string, optionIndex: number) => (
-              <option
-                key={ `${dropdownId}-option-${optionIndex}` }
-                value={ typeaheadTag }
-              />
-            )) }
-          </datalist>
-        </td>
-      </tr>
-    );
-  }
+  return(
+    <tr>
+      <td>
+        <input
+          list={ dropdownId }
+          value={ title }
+          onChange={ (event: ChangeEvent<HTMLInputElement>) => handleInputChange(event.target.value) }
+        />
+        <datalist id={ dropdownId }>
+          { typeaheadTags.map((typeaheadTag: string, optionIndex: number) => (
+            <option
+              key={ `${dropdownId}-option-${optionIndex}` }
+              value={ typeaheadTag }
+            />
+          )) }
+        </datalist>
+      </td>
+    </tr>
+  );
 }
 
 export default NewTagsRow;

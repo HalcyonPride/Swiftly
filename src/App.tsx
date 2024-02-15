@@ -17,8 +17,10 @@ export function App() {
     }]
   });
 
-  const onUnload = useCallback((event: BeforeUnloadEvent) => {
-    event.returnValue = ''; // reminder to save before navigating away from web page
+  const onUnload = useCallback((event: BeforeUnloadEvent) => { // reminder to save before navigating away from web page
+    /** https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event */
+    event.preventDefault();
+    event.returnValue = true;
   }, []);
 
   useEffect(() => {

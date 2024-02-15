@@ -85,7 +85,7 @@ export function getTextAnalyses(): ITextAnalysisJson {
 
 // accesses database to put text analyses; in absence of online database, simply prints JSON file
 export function putTextAnalyses(textAnalysisJson: ITextAnalysisJson): void {
-  // https://stackoverflow.com/questions/50694881/how-to-download-file-in-react-js
+  /** https://stackoverflow.com/questions/50694881/how-to-download-file-in-react-js */
   const href = URL.createObjectURL(new Blob([JSON.stringify(textAnalysisJson)], { type: 'application/json' }));
   const link = document.createElement('a');
   link.href = href;

@@ -7,9 +7,9 @@ import { ITextAnalysisJson } from '../../Interfaces/ITextAnalysis';
 
 interface INewTagsProps {
   textAnalysisJson: ITextAnalysisJson;
-  analysisIndex: number; // needed to find the text analysis to update
-  addEmptyTag: (analysisIndex: number) => void;
-  editTag: (analysisIndex: number, tagIndex: number, title: string) => void;
+  analysisIndex: number;
+  addEmptyTag: () => void;
+  editTag: (tagIndex: number, title: string) => void;
 }
 
 export function NewTags(newTagsProps: INewTagsProps) {
@@ -30,8 +30,7 @@ export function NewTags(newTagsProps: INewTagsProps) {
         { textAnalysisJson.analyses[analysisIndex].tags.map((tag: ITag, tagIndex: number) => (
           !!tag.added ?
             <NewTagsRow
-              key={ `new-tags-row-${analysisIndex}-${tagIndex}` }
-              analysisIndex={ analysisIndex }
+              key={ `new-tags-row-${tagIndex}` }
               tagIndex={ tagIndex }
               tag={ tag }
               editTag={ editTag }
@@ -40,7 +39,7 @@ export function NewTags(newTagsProps: INewTagsProps) {
         )) }
         <tr>
           <td>
-            <button onClick={ () => addEmptyTag(analysisIndex) }>Add tag</button>
+            <button onClick={ () => addEmptyTag() }>Add tag</button>
           </td>
         </tr>
       </tbody>

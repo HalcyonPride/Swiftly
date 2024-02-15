@@ -4,15 +4,13 @@ import getTypeaheadTags from '../../DataSources/TypeaheadTagsDataSource';
 import ITag from '../../Interfaces/ITag';
 
 interface INewTagsRowProps {
-  analysisIndex: number; // needed to find the text analysis to update
   tagIndex: number; // needed to find the tag to update
   tag: ITag;
-  editTag: (analysisIndex: number, tagIndex: number, title: string) => void;
+  editTag: (tagIndex: number, title: string) => void;
 }
 
 export function NewTagsRow(newTagsRowProps: INewTagsRowProps) {
   const {
-    analysisIndex,
     tagIndex,
     tag,
     editTag
@@ -23,18 +21,18 @@ export function NewTagsRow(newTagsRowProps: INewTagsRowProps) {
 
   const timeoutIdRef = useRef<number | undefined>(undefined); // throttle so it doesn't trigger on every key press
 
-  const dropdownId = `typeahead-tags-${analysisIndex}-${tagIndex}`; // MUST have unique ID so React can render multiple similar lists correctly
+  const dropdownId = `typeahead-tags-${tagIndex}`;
 
   const handleInputChange = useCallback((input: string) => {
     setTitle(input);
     if (input !== title) { // only search if query has changed
       clearTimeout(timeoutIdRef.current);
       timeoutIdRef.current = window.setTimeout(() => {
-        editTag(analysisIndex, tagIndex, input); // update tag in text analysis JSON
+        editTag(tagIndex, input); // update tag in text analysis JSON
         setTypeaheadTags(getTypeaheadTags(input)); // render typeahead tags
       }, 300);
     }
-  }, [ analysisIndex, tagIndex, title, editTag ]);
+  }, [ tagIndex, title, editTag ]);
 
   return(
     <tr>

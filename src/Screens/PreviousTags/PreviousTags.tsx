@@ -7,8 +7,8 @@ import { ITextAnalysisJson } from '../../Interfaces/ITextAnalysis';
 
 interface IPreviousTagsProps {
   textAnalysisJson: ITextAnalysisJson;
-  analysisIndex: number; // needed to find the text analysis to update
-  rejectTag: (analysisIndex: number, tagIndex: number) => void;
+  analysisIndex: number;
+  rejectTag: (tagIndex: number) => void;
 }
 
 export function PreviousTags(previousTagsProps: IPreviousTagsProps) {
@@ -29,8 +29,7 @@ export function PreviousTags(previousTagsProps: IPreviousTagsProps) {
         { textAnalysisJson.analyses[analysisIndex].tags.map((tag: ITag, tagIndex: number) => (
           !tag.added ?
             <PreviousTagsRow
-              key={ `previous-tags-row-${analysisIndex}-${tagIndex}` }
-              analysisIndex={ analysisIndex }
+              key={ `previous-tags-row-${tagIndex}` }
               tagIndex={ tagIndex }
               tag={ tag }
               rejectTag={ rejectTag }

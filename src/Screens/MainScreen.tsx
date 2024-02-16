@@ -1,34 +1,28 @@
+import { useContext } from 'react';
 import './MainScreen.css';
 
 import TextContent from './TextContent';
 import PreviousTags from './PreviousTags/PreviousTags';
 import NewTags from './NewTags/NewTags';
 
-import { ITextAnalysisJson } from '../Interfaces/ITextAnalysis';
+import { AnalysisIndexContext } from '../Providers/AnalysisIndexProvider';
+import { TextAnalysisJsonContext } from '../Providers/TextAnalysisJsonProvider';
 import BetterScroller from '../Utilities/BetterScroller';
-
-interface IMainScreenProps {
-  textAnalysisJson: ITextAnalysisJson;
-  analysisIndex: number;
-  rejectTag: (tagIndex: number) => void;
-  addEmptyTag: () => void;
-  editTag: (tagIndex: number, title: string) => void;
-}
+import translateAnalysisIndex from '../Utilities/translateAnalysisIndex';
 
 // renders main screen for text analysis
-export function MainScreen(mainScreenProps: IMainScreenProps) {
-  const {
-    textAnalysisJson,
-    analysisIndex,
-    rejectTag,
-    addEmptyTag,
-    editTag
-  } = mainScreenProps;
+
+export function MainScreen() {
+  const TextAnalysisJson = useContext(TextAnalysisJsonContext);
+  const analysisIndex = translateAnalysisIndex(useContext(AnalysisIndexContext), TextAnalysisJson.analyses.length);
+
   const {
     text,
-    textTitle
-  } = textAnalysisJson.analyses[analysisIndex];
-  const pages = textAnalysisJson.analyses.length;
+    textTitle,
+    tags
+  } = TextAnalysisJson.analyses[analysisIndex];
+  const pages = TextAnalysisJson.analyses.length;
+
   return(
     <div className='MainScreen'>
       <div className='LeftColumn'>
@@ -58,9 +52,7 @@ export function MainScreen(mainScreenProps: IMainScreenProps) {
             currentPage={ analysisIndex }
           >
             <PreviousTags
-              textAnalysisJson={ textAnalysisJson }
-              analysisIndex={ analysisIndex }
-              rejectTag={ rejectTag }
+              tags={ tags }
             />
           </BetterScroller>
         </div>
@@ -71,10 +63,7 @@ export function MainScreen(mainScreenProps: IMainScreenProps) {
             currentPage={ analysisIndex }
           >
             <NewTags
-              textAnalysisJson={ textAnalysisJson }
-              analysisIndex={ analysisIndex }
-              addEmptyTag={ addEmptyTag }
-              editTag={ editTag }
+              tags={ tags }
             />
           </BetterScroller>
         </div>

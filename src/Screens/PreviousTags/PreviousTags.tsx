@@ -3,20 +3,13 @@ import '../MainScreen.css';
 import PreviousTagsRow from './PreviousTagsRow';
 
 import ITag from '../../Interfaces/ITag';
-import { ITextAnalysisJson } from '../../Interfaces/ITextAnalysis';
 
 interface IPreviousTagsProps {
-  textAnalysisJson: ITextAnalysisJson;
-  analysisIndex: number;
-  rejectTag: (tagIndex: number) => void;
+  tags: ITag[];
 }
 
 export function PreviousTags(previousTagsProps: IPreviousTagsProps) {
-  const {
-    textAnalysisJson,
-    analysisIndex,
-    rejectTag
-  } = previousTagsProps;
+  const { tags } = previousTagsProps;
   return(
     <table>
       <thead>
@@ -26,13 +19,12 @@ export function PreviousTags(previousTagsProps: IPreviousTagsProps) {
         </tr>
       </thead>
       <tbody>
-        { textAnalysisJson.analyses[analysisIndex].tags.map((tag: ITag, tagIndex: number) => (
+        { tags.map((tag: ITag, tagIndex: number) => (
           !tag.added ?
             <PreviousTagsRow
               key={ `previous-tags-row-${tagIndex}` }
               tagIndex={ tagIndex }
               tag={ tag }
-              rejectTag={ rejectTag }
             />
             : null
         )) }

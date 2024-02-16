@@ -20,23 +20,3 @@ main {
 h1 {
   margin-top: 0;
 }
-
-.Footer {
-  padding: 30px 15px 15px 15px;
-  flex: none;
-  display: flex;
-  column-gap: 10px;
-  justify-content: flex-end;
-}
-
-.Footer select {
-  width: 60px;
-}
-
-.Footer option {
-  font-size: x-large;
-}
-
-.Footer button {
-  font-size: x-large;
-}

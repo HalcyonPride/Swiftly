@@ -1,24 +1,30 @@
+import { useCallback, useContext } from 'react';
 import '../MainScreen.css';
 
 import NewTagsRow from './NewTagsRow';
 
 import ITag from '../../Interfaces/ITag';
-import { ITextAnalysisJson } from '../../Interfaces/ITextAnalysis';
+import { AnalysisIndexContext } from '../../Providers/AnalysisIndexProvider';
+import { TextAnalysisJsonContext, TextAnalysisJsonDispatchContext } from '../../Providers/TextAnalysisJsonProvider';
+import translateAnalysisIndex from '../../Utilities/translateAnalysisIndex';
 
 interface INewTagsProps {
-  textAnalysisJson: ITextAnalysisJson;
-  analysisIndex: number;
-  addEmptyTag: () => void;
-  editTag: (tagIndex: number, title: string) => void;
+  tags: ITag[];
 }
 
 export function NewTags(newTagsProps: INewTagsProps) {
-  const {
-    textAnalysisJson,
-    analysisIndex,
-    addEmptyTag,
-    editTag
-  } = newTagsProps;
+  const { tags } = newTagsProps;
+  const TextAnalysisJson = useContext(TextAnalysisJsonContext);
+  const TextAnalysisJsonDispatch = useContext(TextAnalysisJsonDispatchContext);
+  const analysisIndex = translateAnalysisIndex(useContext(AnalysisIndexContext), TextAnalysisJson.analyses.length);
+
+  const handleAddTag = useCallback(() => {
+    TextAnalysisJsonDispatch!({
+      type: 'add',
+      analysisIndex
+    });
+  }, [ TextAnalysisJsonDispatch, analysisIndex ]);
+
   return(
     <table>
       <thead>
@@ -27,19 +33,18 @@ export function NewTags(newTagsProps: INewTagsProps) {
         </tr>
       </thead>
       <tbody>
-        { textAnalysisJson.analyses[analysisIndex].tags.map((tag: ITag, tagIndex: number) => (
+        { tags.map((tag: ITag, tagIndex: number) => (
           !!tag.added ?
             <NewTagsRow
               key={ `new-tags-row-${tagIndex}` }
               tagIndex={ tagIndex }
               tag={ tag }
-              editTag={ editTag }
             />
             : null
         )) }
         <tr>
           <td>
-            <button onClick={ () => addEmptyTag() }>Add tag</button>
+            <button onClick={ handleAddTag }>Add tag</button>
           </td>
         </tr>
       </tbody>

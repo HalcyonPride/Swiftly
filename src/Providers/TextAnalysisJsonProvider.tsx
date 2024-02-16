@@ -4,7 +4,7 @@ import { getTextAnalyses } from '../DataSources/TextAnalysisDataSource';
 import { ITextAnalysisJson } from '../Interfaces/ITextAnalysis';
 import { deepCopyWithTagAdd, deepCopyWithTagEdit } from '../Utilities/deepCopyHelpers';
 
-interface ITextAnalysisJsonAction {
+export interface ITextAnalysisJsonAction {
   type: 'reject' | 'add' | 'edit';
   analysisIndex: number;
   tagIndex?: number;
@@ -15,9 +15,7 @@ interface ITextAnalysisJsonProviderProps {
   children: React.ReactNode;
 }
 
-const initialTextAnalysisJson = getTextAnalyses();
-
-export const TextAnalysisJsonContext = createContext<ITextAnalysisJson>(initialTextAnalysisJson);
+export const TextAnalysisJsonContext = createContext<ITextAnalysisJson | null>(null);
 export const TextAnalysisJsonDispatchContext = createContext<Dispatch<ITextAnalysisJsonAction> | null>(null);
 
 function textAnalysisJsonTasksReducer(textAnalysisJson: ITextAnalysisJson, textAnalysisJsonAction: ITextAnalysisJsonAction) {
@@ -56,9 +54,11 @@ function textAnalysisJsonTasksReducer(textAnalysisJson: ITextAnalysisJson, textA
         }
       );
     }
-    default: { throw Error(); }
+    default: { throw Error(`Invalid textAnalysisJsonTask: ${type}`); }
   }
 }
+
+const initialTextAnalysisJson = getTextAnalyses();
 
 export function TextAnalysisJsonProvider(textAnalysisJsonProviderProps: ITextAnalysisJsonProviderProps) {
   const { children } = textAnalysisJsonProviderProps;

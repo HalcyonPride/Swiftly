@@ -1,6 +1,6 @@
 import { Dispatch, createContext, useReducer } from 'react';
 
-interface IAnalysisIndexAction {
+export interface IAnalysisIndexAction {
   type: 'previous' | 'next' | 'set';
   index?: number;
 }
@@ -9,7 +9,7 @@ interface IAnalysisIndexProviderProps {
   children: React.ReactNode;
 }
 
-export const AnalysisIndexContext = createContext(0);
+export const AnalysisIndexContext = createContext<number | null>(null);
 export const AnalysisIndexDispatchContext = createContext<Dispatch<IAnalysisIndexAction> | null>(null);
 
 function analysisIndexTasksReducer(analysisIndex: number, analysisIndexAction: IAnalysisIndexAction) {
@@ -25,9 +25,11 @@ function analysisIndexTasksReducer(analysisIndex: number, analysisIndexAction: I
   }
 }
 
+const initialAnalysisIndex = 0;
+
 export function AnalysisIndexProvider(analysisIndexProviderProps: IAnalysisIndexProviderProps) {
   const { children } = analysisIndexProviderProps;
-  const [ analysisIndex, dispatch ] = useReducer(analysisIndexTasksReducer, 0);
+  const [ analysisIndex, dispatch ] = useReducer(analysisIndexTasksReducer, initialAnalysisIndex);
 
   return(
     <AnalysisIndexContext.Provider value={ analysisIndex }>

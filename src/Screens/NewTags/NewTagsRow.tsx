@@ -1,9 +1,11 @@
-import { ChangeEvent, useCallback, useContext, useRef, useState } from 'react';
+import { ChangeEvent, Dispatch, useCallback, useRef, useState } from 'react';
 
 import getTypeaheadTags from '../../DataSources/TypeaheadTagsDataSource';
+import useContextWithNullCheck from '../../Hooks/useContextWithNullCheck';
 import ITag from '../../Interfaces/ITag';
+import { ITextAnalysisJson } from '../../Interfaces/ITextAnalysis';
 import { AnalysisIndexContext } from '../../Providers/AnalysisIndexProvider';
-import { TextAnalysisJsonContext, TextAnalysisJsonDispatchContext } from '../../Providers/TextAnalysisJsonProvider';
+import { ITextAnalysisJsonAction, TextAnalysisJsonContext, TextAnalysisJsonDispatchContext } from '../../Providers/TextAnalysisJsonProvider';
 import translateAnalysisIndex from '../../Utilities/translateAnalysisIndex';
 
 interface INewTagsRowProps {
@@ -17,9 +19,9 @@ export function NewTagsRow(newTagsRowProps: INewTagsRowProps) {
     tag
   } = newTagsRowProps;
   const { title } = tag;
-  const TextAnalysisJson = useContext(TextAnalysisJsonContext);
-  const TextAnalysisJsonDispatch = useContext(TextAnalysisJsonDispatchContext);
-  const analysisIndex = translateAnalysisIndex(useContext(AnalysisIndexContext), TextAnalysisJson.analyses.length);
+  const TextAnalysisJson = useContextWithNullCheck<ITextAnalysisJson>(TextAnalysisJsonContext);
+  const TextAnalysisJsonDispatch = useContextWithNullCheck<Dispatch<ITextAnalysisJsonAction>>(TextAnalysisJsonDispatchContext);
+  const analysisIndex = translateAnalysisIndex(useContextWithNullCheck<number>(AnalysisIndexContext), TextAnalysisJson.analyses.length);
 
   const [ typeaheadTags, setTypeaheadTags ] = useState<string[]>([]);
 
@@ -28,7 +30,7 @@ export function NewTagsRow(newTagsRowProps: INewTagsRowProps) {
   const dropdownId = `typeahead-tags-${tagIndex}`;
 
   const handleInputChange = useCallback((input: string) => {
-    TextAnalysisJsonDispatch!({
+    TextAnalysisJsonDispatch({
       type: 'edit',
       analysisIndex,
       tagIndex,

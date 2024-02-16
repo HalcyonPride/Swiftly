@@ -1,11 +1,13 @@
-import { useCallback, useContext } from 'react';
+import { Dispatch, useCallback } from 'react';
 import '../MainScreen.css';
 
 import NewTagsRow from './NewTagsRow';
 
+import useContextWithNullCheck from '../../Hooks/useContextWithNullCheck';
 import ITag from '../../Interfaces/ITag';
+import { ITextAnalysisJson } from '../../Interfaces/ITextAnalysis';
 import { AnalysisIndexContext } from '../../Providers/AnalysisIndexProvider';
-import { TextAnalysisJsonContext, TextAnalysisJsonDispatchContext } from '../../Providers/TextAnalysisJsonProvider';
+import { ITextAnalysisJsonAction, TextAnalysisJsonContext, TextAnalysisJsonDispatchContext } from '../../Providers/TextAnalysisJsonProvider';
 import translateAnalysisIndex from '../../Utilities/translateAnalysisIndex';
 
 interface INewTagsProps {
@@ -14,12 +16,12 @@ interface INewTagsProps {
 
 export function NewTags(newTagsProps: INewTagsProps) {
   const { tags } = newTagsProps;
-  const TextAnalysisJson = useContext(TextAnalysisJsonContext);
-  const TextAnalysisJsonDispatch = useContext(TextAnalysisJsonDispatchContext);
-  const analysisIndex = translateAnalysisIndex(useContext(AnalysisIndexContext), TextAnalysisJson.analyses.length);
+  const TextAnalysisJson = useContextWithNullCheck<ITextAnalysisJson>(TextAnalysisJsonContext);
+  const TextAnalysisJsonDispatch = useContextWithNullCheck<Dispatch<ITextAnalysisJsonAction>>(TextAnalysisJsonDispatchContext);
+  const analysisIndex = translateAnalysisIndex(useContextWithNullCheck<number>(AnalysisIndexContext), TextAnalysisJson.analyses.length);
 
   const handleAddTag = useCallback(() => {
-    TextAnalysisJsonDispatch!({
+    TextAnalysisJsonDispatch({
       type: 'add',
       analysisIndex
     });

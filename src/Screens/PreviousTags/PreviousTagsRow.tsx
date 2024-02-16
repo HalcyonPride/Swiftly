@@ -1,8 +1,10 @@
-import { useCallback, useContext } from 'react';
+import { Dispatch, useCallback } from 'react';
 
+import useContextWithNullCheck from '../../Hooks/useContextWithNullCheck';
 import ITag from '../../Interfaces/ITag';
+import { ITextAnalysisJson } from '../../Interfaces/ITextAnalysis';
 import { AnalysisIndexContext } from '../../Providers/AnalysisIndexProvider';
-import { TextAnalysisJsonContext, TextAnalysisJsonDispatchContext } from '../../Providers/TextAnalysisJsonProvider';
+import { ITextAnalysisJsonAction, TextAnalysisJsonContext, TextAnalysisJsonDispatchContext } from '../../Providers/TextAnalysisJsonProvider';
 import translateAnalysisIndex from '../../Utilities/translateAnalysisIndex';
 
 interface IPreviousTagsRowProps {
@@ -19,12 +21,12 @@ export function PreviousTagsRow(previousTagsRowProps: IPreviousTagsRowProps) {
     title,
     rejected
   } = tag;
-  const TextAnalysisJson = useContext(TextAnalysisJsonContext);
-  const TextAnalysisJsonDispatch = useContext(TextAnalysisJsonDispatchContext);
-  const analysisIndex = translateAnalysisIndex(useContext(AnalysisIndexContext), TextAnalysisJson.analyses.length);
+  const TextAnalysisJson = useContextWithNullCheck<ITextAnalysisJson>(TextAnalysisJsonContext);
+  const TextAnalysisJsonDispatch = useContextWithNullCheck<Dispatch<ITextAnalysisJsonAction>>(TextAnalysisJsonDispatchContext);
+  const analysisIndex = translateAnalysisIndex(useContextWithNullCheck<number>(AnalysisIndexContext), TextAnalysisJson.analyses.length);
 
   const handleRejectTag = useCallback((tagIndex: number) => {
-    TextAnalysisJsonDispatch!({
+    TextAnalysisJsonDispatch({
       type: 'reject',
       analysisIndex,
       tagIndex

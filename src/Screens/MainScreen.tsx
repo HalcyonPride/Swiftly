@@ -1,10 +1,11 @@
-import { useContext } from 'react';
 import './MainScreen.css';
 
 import TextContent from './TextContent';
 import PreviousTags from './PreviousTags/PreviousTags';
 import NewTags from './NewTags/NewTags';
 
+import useContextWithNullCheck from '../Hooks/useContextWithNullCheck';
+import { ITextAnalysisJson } from '../Interfaces/ITextAnalysis';
 import { AnalysisIndexContext } from '../Providers/AnalysisIndexProvider';
 import { TextAnalysisJsonContext } from '../Providers/TextAnalysisJsonProvider';
 import BetterScroller from '../Utilities/BetterScroller';
@@ -13,8 +14,8 @@ import translateAnalysisIndex from '../Utilities/translateAnalysisIndex';
 // renders main screen for text analysis
 
 export function MainScreen() {
-  const TextAnalysisJson = useContext(TextAnalysisJsonContext);
-  const analysisIndex = translateAnalysisIndex(useContext(AnalysisIndexContext), TextAnalysisJson.analyses.length);
+  const TextAnalysisJson = useContextWithNullCheck<ITextAnalysisJson>(TextAnalysisJsonContext);
+  const analysisIndex = translateAnalysisIndex(useContextWithNullCheck<number>(AnalysisIndexContext), TextAnalysisJson.analyses.length);
 
   const {
     text,

@@ -48,7 +48,7 @@ export function BetterScroller(betterScrollerProps: IBetterScrollerProps) {
     }
   }, [ currentPage, scrollTops ]);
 
-  return (
+  return(
     <div className="BetterScroller" id={ scrollerId }>
       { children }
     </div>

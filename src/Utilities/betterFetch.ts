@@ -4,7 +4,7 @@ export async function betterFetch<T>(url: string, options?: RequestInit): Promis
     return await response.json();
   } else {
     console.log(await response.text());
-    throw new Error();
+    throw Error();
   }
 }
 

@@ -13,7 +13,7 @@ const randomWords = [
 
 // calls typeahead API to provide tag suggestions; in absence of redacted API, simply queries static list of words
 export function getTypeaheadTags(query: string): string[] {
-  return randomWords.filter((word: string) => word.startsWith(query.toLowerCase()));
+  return randomWords.filter((word: string) => word.startsWith(query.toLowerCase()) && word !== query);
 }
 
 export default getTypeaheadTags;

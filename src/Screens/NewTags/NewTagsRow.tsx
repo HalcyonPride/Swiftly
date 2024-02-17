@@ -1,11 +1,9 @@
-import { ChangeEvent, Dispatch, useCallback, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useRef, useState } from 'react';
 
 import getTypeaheadTags from '../../DataSources/TypeaheadTagsDataSource';
-import useContextWithNullCheck from '../../Hooks/useContextWithNullCheck';
 import ITag from '../../Interfaces/ITag';
-import { ITextAnalysisJson } from '../../Interfaces/ITextAnalysis';
-import { AnalysisIndexContext } from '../../Providers/AnalysisIndexProvider';
-import { ITextAnalysisJsonAction, TextAnalysisJsonContext, TextAnalysisJsonDispatchContext } from '../../Providers/TextAnalysisJsonProvider';
+import { useAnalysisIndexContext } from '../../Providers/AnalysisIndexProvider';
+import { useTextAnalysisJsonContext, useTextAnalysisJsonDispatchContext } from '../../Providers/TextAnalysisJsonProvider';
 import translateAnalysisIndex from '../../Utilities/translateAnalysisIndex';
 
 interface INewTagsRowProps {
@@ -19,9 +17,9 @@ export function NewTagsRow(newTagsRowProps: INewTagsRowProps) {
     tag
   } = newTagsRowProps;
   const { title } = tag;
-  const TextAnalysisJson = useContextWithNullCheck<ITextAnalysisJson>(TextAnalysisJsonContext);
-  const TextAnalysisJsonDispatch = useContextWithNullCheck<Dispatch<ITextAnalysisJsonAction>>(TextAnalysisJsonDispatchContext);
-  const analysisIndex = translateAnalysisIndex(useContextWithNullCheck<number>(AnalysisIndexContext), TextAnalysisJson.analyses.length);
+  const TextAnalysisJson = useTextAnalysisJsonContext();
+  const TextAnalysisJsonDispatch = useTextAnalysisJsonDispatchContext();
+  const analysisIndex = translateAnalysisIndex(useAnalysisIndexContext(), TextAnalysisJson.analyses.length);
 
   const [ typeaheadTags, setTypeaheadTags ] = useState<string[]>([]);
 

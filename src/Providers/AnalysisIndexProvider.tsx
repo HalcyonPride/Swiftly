@@ -1,5 +1,7 @@
 import { Dispatch, createContext, useReducer } from 'react';
 
+import useContextWithNullCheck from '../Hooks/useContextWithNullCheck';
+
 export interface IAnalysisIndexAction {
   type: 'previous' | 'next' | 'set';
   index?: number;
@@ -12,6 +14,13 @@ interface IAnalysisIndexProviderProps {
 export const AnalysisIndexContext = createContext<number | null>(null);
 export const AnalysisIndexDispatchContext = createContext<Dispatch<IAnalysisIndexAction> | null>(null);
 
+export function useAnalysisIndexContext(): number {
+  return useContextWithNullCheck<number>(AnalysisIndexContext);
+}
+export function useAnalysisIndexDispatchContext(): Dispatch<IAnalysisIndexAction> {
+  return useContextWithNullCheck<Dispatch<IAnalysisIndexAction>>(AnalysisIndexDispatchContext);
+}
+
 function analysisIndexTasksReducer(analysisIndex: number, analysisIndexAction: IAnalysisIndexAction) {
   const {
     type,
@@ -19,7 +28,7 @@ function analysisIndexTasksReducer(analysisIndex: number, analysisIndexAction: I
   } = analysisIndexAction;
   switch (type) {
     case 'previous': { return analysisIndex-1; }
-    case 'next': { return analysisIndex+1 }
+    case 'next': { return analysisIndex+1; }
     case 'set': { return index; }
     default: { return analysisIndex; }
   }

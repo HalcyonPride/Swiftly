@@ -1,17 +1,15 @@
-import { ChangeEvent, Dispatch } from 'react';
+import { ChangeEvent } from 'react';
 import './Footer.css';
 
 import { putTextAnalyses } from '../DataSources/TextAnalysisDataSource';
-import useContextWithNullCheck from '../Hooks/useContextWithNullCheck';
-import { ITextAnalysisJson } from '../Interfaces/ITextAnalysis';
-import { AnalysisIndexContext, AnalysisIndexDispatchContext, IAnalysisIndexAction } from '../Providers/AnalysisIndexProvider';
-import { TextAnalysisJsonContext } from '../Providers/TextAnalysisJsonProvider';
+import { useAnalysisIndexContext, useAnalysisIndexDispatchContext } from '../Providers/AnalysisIndexProvider';
+import { useTextAnalysisJsonContext } from '../Providers/TextAnalysisJsonProvider';
 import translateAnalysisIndex from '../Utilities/translateAnalysisIndex';
 
 export function Footer() {
-  const AnalysisIndexDispatch = useContextWithNullCheck<Dispatch<IAnalysisIndexAction>>(AnalysisIndexDispatchContext);
-  const TextAnalysisJson = useContextWithNullCheck<ITextAnalysisJson>(TextAnalysisJsonContext);
-  const analysisIndex = translateAnalysisIndex(useContextWithNullCheck<number>(AnalysisIndexContext), TextAnalysisJson.analyses.length);
+  const AnalysisIndexDispatch = useAnalysisIndexDispatchContext();
+  const TextAnalysisJson = useTextAnalysisJsonContext();
+  const analysisIndex = translateAnalysisIndex(useAnalysisIndexContext(), TextAnalysisJson.analyses.length);
 
   return(
     <div className='Footer'>

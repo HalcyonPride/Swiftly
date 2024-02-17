@@ -1,11 +1,11 @@
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import '../MainScreen.css';
 
 import NewTagsRow from './NewTagsRow';
 
 import ITag from '../../Interfaces/ITag';
-import { AnalysisIndexContext } from '../../Providers/AnalysisIndexProvider';
-import { TextAnalysisJsonContext, TextAnalysisJsonDispatchContext } from '../../Providers/TextAnalysisJsonProvider';
+import { useAnalysisIndexContext } from '../../Providers/AnalysisIndexProvider';
+import { useTextAnalysisJsonContext, useTextAnalysisJsonDispatchContext } from '../../Providers/TextAnalysisJsonProvider';
 import translateAnalysisIndex from '../../Utilities/translateAnalysisIndex';
 
 interface INewTagsProps {
@@ -14,12 +14,12 @@ interface INewTagsProps {
 
 export function NewTags(newTagsProps: INewTagsProps) {
   const { tags } = newTagsProps;
-  const TextAnalysisJson = useContext(TextAnalysisJsonContext);
-  const TextAnalysisJsonDispatch = useContext(TextAnalysisJsonDispatchContext);
-  const analysisIndex = translateAnalysisIndex(useContext(AnalysisIndexContext), TextAnalysisJson.analyses.length);
+  const TextAnalysisJson = useTextAnalysisJsonContext();
+  const TextAnalysisJsonDispatch = useTextAnalysisJsonDispatchContext();
+  const analysisIndex = translateAnalysisIndex(useAnalysisIndexContext(), TextAnalysisJson.analyses.length);
 
   const handleAddTag = useCallback(() => {
-    TextAnalysisJsonDispatch!({
+    TextAnalysisJsonDispatch({
       type: 'add',
       analysisIndex
     });

@@ -1,5 +1,7 @@
 import { Dispatch, createContext, useReducer } from 'react';
 
+import useContextWithNullCheck from '../Hooks/useContextWithNullCheck';
+
 interface IAnalysisIndexAction {
   type: 'previous' | 'next' | 'set';
   index?: number;
@@ -9,8 +11,15 @@ interface IAnalysisIndexProviderProps {
   children: React.ReactNode;
 }
 
-export const AnalysisIndexContext = createContext(0);
-export const AnalysisIndexDispatchContext = createContext<Dispatch<IAnalysisIndexAction> | null>(null);
+const AnalysisIndexContext = createContext<number | null>(null);
+const AnalysisIndexDispatchContext = createContext<Dispatch<IAnalysisIndexAction> | null>(null);
+
+export function useAnalysisIndexContext(): number {
+  return useContextWithNullCheck<number>(AnalysisIndexContext);
+}
+export function useAnalysisIndexDispatchContext(): Dispatch<IAnalysisIndexAction> {
+  return useContextWithNullCheck<Dispatch<IAnalysisIndexAction>>(AnalysisIndexDispatchContext);
+}
 
 function analysisIndexTasksReducer(analysisIndex: number, analysisIndexAction: IAnalysisIndexAction) {
   const {
@@ -19,15 +28,17 @@ function analysisIndexTasksReducer(analysisIndex: number, analysisIndexAction: I
   } = analysisIndexAction;
   switch (type) {
     case 'previous': { return analysisIndex-1; }
-    case 'next': { return analysisIndex+1 }
+    case 'next': { return analysisIndex+1; }
     case 'set': { return index; }
     default: { return analysisIndex; }
   }
 }
 
+const initialAnalysisIndex = 0;
+
 export function AnalysisIndexProvider(analysisIndexProviderProps: IAnalysisIndexProviderProps) {
   const { children } = analysisIndexProviderProps;
-  const [ analysisIndex, dispatch ] = useReducer(analysisIndexTasksReducer, 0);
+  const [ analysisIndex, dispatch ] = useReducer(analysisIndexTasksReducer, initialAnalysisIndex);
 
   return(
     <AnalysisIndexContext.Provider value={ analysisIndex }>

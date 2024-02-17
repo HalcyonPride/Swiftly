@@ -1,6 +1,7 @@
 import { Dispatch, createContext, useReducer } from 'react';
 
 import { getTextAnalyses } from '../DataSources/TextAnalysisDataSource';
+import useContextWithNullCheck from '../Hooks/useContextWithNullCheck';
 import { ITextAnalysisJson } from '../Interfaces/ITextAnalysis';
 import { deepCopyWithTagAdd, deepCopyWithTagEdit } from '../Utilities/deepCopyHelpers';
 
@@ -15,10 +16,15 @@ interface ITextAnalysisJsonProviderProps {
   children: React.ReactNode;
 }
 
-const initialTextAnalysisJson = getTextAnalyses();
+const TextAnalysisJsonContext = createContext<ITextAnalysisJson | null>(null);
+const TextAnalysisJsonDispatchContext = createContext<Dispatch<ITextAnalysisJsonAction> | null>(null);
 
-export const TextAnalysisJsonContext = createContext<ITextAnalysisJson>(initialTextAnalysisJson);
-export const TextAnalysisJsonDispatchContext = createContext<Dispatch<ITextAnalysisJsonAction> | null>(null);
+export function useTextAnalysisJsonContext(): ITextAnalysisJson {
+  return useContextWithNullCheck<ITextAnalysisJson>(TextAnalysisJsonContext);
+}
+export function useTextAnalysisJsonDispatchContext(): Dispatch<ITextAnalysisJsonAction> {
+  return useContextWithNullCheck<Dispatch<ITextAnalysisJsonAction>>(TextAnalysisJsonDispatchContext);
+}
 
 function textAnalysisJsonTasksReducer(textAnalysisJson: ITextAnalysisJson, textAnalysisJsonAction: ITextAnalysisJsonAction) {
   const {
@@ -56,9 +62,11 @@ function textAnalysisJsonTasksReducer(textAnalysisJson: ITextAnalysisJson, textA
         }
       );
     }
-    default: { throw Error(); }
+    default: { throw Error(`Invalid textAnalysisJsonTask: ${type}`); }
   }
 }
+
+const initialTextAnalysisJson = getTextAnalyses();
 
 export function TextAnalysisJsonProvider(textAnalysisJsonProviderProps: ITextAnalysisJsonProviderProps) {
   const { children } = textAnalysisJsonProviderProps;

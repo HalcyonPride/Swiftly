@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 export function useContextWithNullCheck<T>(context: React.Context<T | null>): T {
   const result = useContext(context);
-  if (!!result) {
+  if (result !== null) {
     return result;
   } else {
     throw Error(`Null context at runtime`);

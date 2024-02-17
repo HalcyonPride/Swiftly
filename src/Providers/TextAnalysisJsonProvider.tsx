@@ -5,7 +5,7 @@ import useContextWithNullCheck from '../Hooks/useContextWithNullCheck';
 import { ITextAnalysisJson } from '../Interfaces/ITextAnalysis';
 import { deepCopyWithTagAdd, deepCopyWithTagEdit } from '../Utilities/deepCopyHelpers';
 
-export interface ITextAnalysisJsonAction {
+interface ITextAnalysisJsonAction {
   type: 'reject' | 'add' | 'edit';
   analysisIndex: number;
   tagIndex?: number;
@@ -16,8 +16,8 @@ interface ITextAnalysisJsonProviderProps {
   children: React.ReactNode;
 }
 
-export const TextAnalysisJsonContext = createContext<ITextAnalysisJson | null>(null);
-export const TextAnalysisJsonDispatchContext = createContext<Dispatch<ITextAnalysisJsonAction> | null>(null);
+const TextAnalysisJsonContext = createContext<ITextAnalysisJson | null>(null);
+const TextAnalysisJsonDispatchContext = createContext<Dispatch<ITextAnalysisJsonAction> | null>(null);
 
 export function useTextAnalysisJsonContext(): ITextAnalysisJson {
   return useContextWithNullCheck<ITextAnalysisJson>(TextAnalysisJsonContext);

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import '../MainScreen.css';
+import '../MainScreen.scss';
 
 import NewTagsRow from './NewTagsRow';
 

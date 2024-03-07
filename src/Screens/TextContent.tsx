@@ -1,4 +1,4 @@
-import './MainScreen.css';
+import './MainScreen.scss';
 
 interface ITextContentProps {
   text: string;

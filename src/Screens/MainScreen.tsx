@@ -1,4 +1,4 @@
-import './MainScreen.css';
+import './MainScreen.scss';
 
 import TextContent from './TextContent';
 import PreviousTags from './PreviousTags/PreviousTags';
